@@ -1,70 +1,73 @@
-# AKS Cluster with Terraform
+# Clúster AKS con Terraform
 
-Provisioning an Azure Kubernetes Service (AKS) cluster using Terraform and deploying a sample nginx application.
+**Saul Barillas**
+**999017182**
 
-## Architecture
+Aprovisionamiento de un clúster de Azure Kubernetes Service (AKS) usando Terraform y despliegue de una aplicación nginx.
 
-- **Resource Group** (`aks-rg`): Container for all Azure resources
-- **AKS Cluster** (`aks-cluster`): Managed Kubernetes with 1 node (Standard_B2s)
-- **nginx Deployment**: 2 replicas behind an Azure Load Balancer
+## Arquitectura
 
-## Files
+- **Resource Group** (`aks-rg`): Contenedor lógico para todos los recursos de Azure
+- **AKS Cluster** (`aks-cluster`): Kubernetes administrado con 1 nodo (Standard_D2s_v7)
+- **nginx Deployment**: 2 réplicas detrás de un Azure Load Balancer
 
-| File | Description |
-|------|-------------|
-| `main.tf` | Core Terraform config: AKS cluster + Resource Group |
-| `variables.tf` | Input variables (region, VM size, node count, etc.) |
-| `outputs.tf` | Output values (cluster name, kubeconfig command) |
-| `terraform.tfvars` | User-specific values — edit before running |
-| `app.yaml` | Kubernetes manifest: nginx Deployment + LoadBalancer Service |
+## Archivos
 
-## Prerequisites
+| Archivo | Descripción |
+|---------|-------------|
+| `main.tf` | Configuración principal de Terraform: clúster AKS + Resource Group |
+| `variables.tf` | Variables de entrada (región, tamaño de VM, número de nodos, etc.) |
+| `outputs.tf` | Valores de salida (nombre del clúster, comando para kubeconfig) |
+| `terraform.tfvars` | Valores específicos del usuario — editar antes de ejecutar |
+| `app.yaml` | Manifiesto de Kubernetes: Deployment de nginx + Service LoadBalancer |
 
-- [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
+## Requisitos
+
+- [Azure CLI](https://learn.microsoft.com/es-es/cli/azure/install-azure-cli)
 - [Terraform](https://developer.hashicorp.com/terraform/install)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
-- An Azure account with an active subscription
+- Una cuenta de Azure con una suscripción activa
 
-## How to Run
+## Cómo ejecutar
 
 ```bash
-# 1. Log in to Azure
+# 1. Iniciar sesión en Azure
 az login
 
-# 2. Create a service principal (replace YOUR_SUBSCRIPTION_ID)
+# 2. Crear un service principal (reemplazar TU_SUBSCRIPTION_ID)
 az ad sp create-for-rbac \
   --name "terraform-aks-sp" \
   --role Contributor \
-  --scopes /subscriptions/YOUR_SUBSCRIPTION_ID/resourceGroups/aks-rg
+  --scopes /subscriptions/TU_SUBSCRIPTION_ID
 
-# 3. Export credentials
+# 3. Exportar credenciales como variables de entorno
 export ARM_CLIENT_ID="<appId>"
 export ARM_CLIENT_SECRET="<password>"
 export ARM_TENANT_ID="<tenant>"
 export ARM_SUBSCRIPTION_ID="<subscriptionId>"
 
-# 4. Generate SSH keys
+# 4. Generar llaves SSH
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/aks-key -N ""
 
-# 5. Initialize and apply Terraform
+# 5. Inicializar y aplicar Terraform
 terraform init
 terraform plan
 terraform apply
 
-# 6. Connect to the cluster
+# 6. Conectarse al clúster
 az aks get-credentials --resource-group aks-rg --name aks-cluster --overwrite-existing
 kubectl get nodes
 
-# 7. Deploy the sample app
+# 7. Desplegar la aplicación
 kubectl apply -f app.yaml
 kubectl get service nginx-service --watch
-# Open the EXTERNAL-IP in your browser
+# Abrir la EXTERNAL-IP en el navegador
 
-# 8. IMPORTANT — Destroy when done to save credit
+# 8. IMPORTANTE — Destruir al terminar para no gastar crédito
 terraform destroy
 ```
 
-## Cost
+## Costo
 
-- Standard_B2s: ~$0.04/hour
-- Always run `terraform destroy` when you're done working
+- Standard_D2s_v7: ~$2-3 USD por día
+- Siempre ejecutar `terraform destroy` al terminar de trabajar
