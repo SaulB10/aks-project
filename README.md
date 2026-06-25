@@ -3,7 +3,7 @@
 **Saul Barillas**
 **999017182**
 
-Aprovisionamiento de un clúster de Azure Kubernetes Service (AKS) usando Terraform y despliegue de una aplicación nginx.
+Clúster de Azure Kubernetes Service (AKS) usando Terraform y despliegue de una aplicación nginx.
 
 ## Arquitectura
 
