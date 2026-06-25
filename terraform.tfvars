@@ -1,6 +1,3 @@
-# ──────────────────────────────────────────────
-# Ajustá estos valores según tu configuración
-# ──────────────────────────────────────────────
 
 resource_group_name = "aks-rg"
 location            = "eastus"          # Opciones cercanas a Guatemala: "southcentralus" (Texas)

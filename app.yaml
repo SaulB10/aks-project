@@ -1,8 +1,3 @@
-# ──────────────────────────────────────────────
-# Sample Application — nginx Deployment + LoadBalancer
-# ──────────────────────────────────────────────
-# This deploys a simple nginx web server with 2 replicas
-# and exposes it to the internet via an Azure Load Balancer.
 
 apiVersion: apps/v1
 kind: Deployment
